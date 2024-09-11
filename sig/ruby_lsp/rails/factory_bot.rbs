@@ -1,0 +1,7 @@
+module RubyLsp
+  module Rails
+    module FactoryBot
+      VERSION: String
+    end
+  end
+end

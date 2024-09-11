@@ -1,0 +1,95 @@
+GIT
+  remote: https://github.com/johansenja/ruby-lsp-rails.git
+  revision: 31533663d38992acdc6f4d3ba5d41b3e9c83fd58
+  branch: extend-runtime-server
+  specs:
+    ruby-lsp-rails (0.3.13)
+      ruby-lsp (>= 0.17.12, < 0.18.0)
+
+PATH
+  remote: .
+  specs:
+    ruby-lsp-rails-factory-bot (0.1.0)
+      factory_bot (~> 6.4.6)
+      ruby-lsp (~> 0.17.17)
+      ruby-lsp-rails
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (7.2.1)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.3.1)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      logger (>= 1.4.2)
+      minitest (>= 5.1)
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
+    ast (2.4.2)
+    base64 (0.2.0)
+    bigdecimal (3.1.8)
+    concurrent-ruby (1.3.4)
+    connection_pool (2.4.1)
+    drb (2.2.1)
+    factory_bot (6.4.6)
+      activesupport (>= 5.0.0)
+    i18n (1.14.5)
+      concurrent-ruby (~> 1.0)
+    json (2.7.2)
+    language_server-protocol (3.17.0.3)
+    logger (1.6.1)
+    minitest (5.25.1)
+    parallel (1.25.1)
+    parser (3.3.4.0)
+      ast (~> 2.4.1)
+      racc
+    prism (1.0.0)
+    racc (1.8.0)
+    rainbow (3.1.1)
+    rake (13.2.1)
+    rbs (3.5.3)
+      logger
+    regexp_parser (2.9.2)
+    rexml (3.3.2)
+      strscan
+    rubocop (1.65.0)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
+      parallel (~> 1.10)
+      parser (>= 3.3.0.2)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 2.4, < 3.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 3.0)
+    rubocop-ast (1.31.3)
+      parser (>= 3.3.1.0)
+    ruby-lsp (0.17.17)
+      language_server-protocol (~> 3.17.0)
+      prism (~> 1.0)
+      rbs (>= 3, < 4)
+      sorbet-runtime (>= 0.5.10782)
+    ruby-progressbar (1.13.0)
+    securerandom (0.3.1)
+    sorbet-runtime (0.5.11554)
+    strscan (3.1.0)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    unicode-display_width (2.5.0)
+
+PLATFORMS
+  ruby
+  x86_64-darwin-21
+
+DEPENDENCIES
+  rake (~> 13.0)
+  rubocop (~> 1.21)
+  ruby-lsp-rails!
+  ruby-lsp-rails-factory-bot!
+
+BUNDLED WITH
+   2.5.11
