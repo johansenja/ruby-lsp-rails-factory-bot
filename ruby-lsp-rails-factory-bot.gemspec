@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "A ruby-lsp-rails extension for factorybot"
   spec.description = "A ruby-lsp-rails extension for factorybot, providing factory, trait and attribute completion, and more"
-  spec.homepage = "https://github.com/johansenja/ruby-lsp-factory-bot"
+  spec.homepage = "https://github.com/johansenja/ruby-lsp-rails-factory-bot"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 
