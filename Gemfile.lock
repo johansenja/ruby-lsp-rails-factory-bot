@@ -1,10 +1,26 @@
+<<<<<<< HEAD
+=======
+GIT
+  remote: https://github.com/johansenja/ruby-lsp-rails.git
+  revision: 6cb9bb67f7d3c15d3c0784918d861cfd03fb5635
+  branch: separate-server-addon
+  specs:
+    ruby-lsp-rails (0.3.16)
+      ruby-lsp (>= 0.18.4, < 0.19.0)
+
+>>>>>>> b19470b (Move to ruby-lsp-rails native addon)
 PATH
   remote: .
   specs:
     ruby-lsp-rails-factory-bot (0.2.0)
       factory_bot (~> 6.4.6)
+<<<<<<< HEAD
       ruby-lsp (~> 0.23)
       ruby-lsp-rails (~> 0.4)
+=======
+      ruby-lsp (~> 0.18.4)
+      ruby-lsp-rails
+>>>>>>> b19470b (Move to ruby-lsp-rails native addon)
 
 GEM
   remote: https://rubygems.org/
@@ -60,7 +76,11 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
+<<<<<<< HEAD
     ruby-lsp (0.23.10)
+=======
+    ruby-lsp (0.18.4)
+>>>>>>> b19470b (Move to ruby-lsp-rails native addon)
       language_server-protocol (~> 3.17.0)
       prism (>= 1.2, < 2.0)
       rbs (>= 3, < 4)
