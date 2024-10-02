@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "ruby_lsp/addon"
-require "ruby_lsp/ruby_lsp_rails/server_addon"
 require "ruby_lsp/ruby_lsp_rails/runner_client"
 
 require_relative "completion"

@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/johansenja/ruby-lsp-rails.git
-  revision: 6cb9bb67f7d3c15d3c0784918d861cfd03fb5635
-  branch: separate-server-addon
+  remote: https://github.com/Shopify/ruby-lsp-rails.git
+  revision: 51df5acf4ad9231900c6587d2c92bdcf09a90d0f
+  branch: main
   specs:
     ruby-lsp-rails (0.3.16)
       ruby-lsp (>= 0.18.4, < 0.19.0)
