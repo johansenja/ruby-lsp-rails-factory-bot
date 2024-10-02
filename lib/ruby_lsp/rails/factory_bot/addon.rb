@@ -13,9 +13,7 @@ module RubyLsp
     module FactoryBot
       class Addon < ::RubyLsp::Addon
         def activate(global_state, *)
-          RubyLsp::Rails::ServerAddon.register(
-            File.join(__dir__, "server_addon.rb")
-          )
+          runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
 
           @ruby_index = global_state.index
         end
@@ -50,7 +48,8 @@ module RubyLsp
         private
 
         def runner_client
-          RubyLsp::Rails::RunnerClient.instance
+          @rails_addon ||= ::RubyLsp::Addon.get("Ruby LSP Rails")
+          @rails_addon.rails_runner_client
         end
 
         FACTORY_BOT_METHODS = %i[

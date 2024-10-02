@@ -39,7 +39,7 @@ module RubyLsp
             collection = handle_attributes(params)
           end
 
-          { result: collection } if collection
+          write_response({ result: collection })
         end
 
         private
