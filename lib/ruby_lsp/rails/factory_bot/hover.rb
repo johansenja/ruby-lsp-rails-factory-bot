@@ -2,6 +2,8 @@
 
 require "ruby_lsp/internal"
 
+require_relative "addon_name"
+
 module RubyLsp
   module Rails
     module FactoryBot
@@ -61,7 +63,8 @@ module RubyLsp
 
         def handle_attribute(symbol_node, factory_node)
           name = symbol_node.value.to_s
-          attribute = @server_client.get_attributes(
+          attribute = make_request(
+            :attributes,
             factory_name: factory_node.value.to_s, name: name
           )&.find { |attr| attr[:name] == name }
 
@@ -76,7 +79,10 @@ module RubyLsp
         def handle_factory(symbol_node)
           name = symbol_node.value.to_s
 
-          factory = @server_client.get_factories(name: name)&.find { |f| f[:name] == name }
+          factory = make_request(
+            :factories,
+            name: name
+          )&.find { |f| f[:name] == name }
 
           return unless factory
 
@@ -102,7 +108,8 @@ module RubyLsp
           factory_name = factory_node.value.to_s
           trait_name = symbol_node.value.to_s
 
-          trait = @server_client.get_traits(
+          trait = make_request(
+            :traits,
             factory_name: factory_name, name: trait_name
           )&.find { |tr| tr[:name] == trait_name }
 
@@ -111,6 +118,14 @@ module RubyLsp
           @response_builder.push(
             "#{trait[:name]} (trait of #{trait[:owner] || factory_name})",
             category: :documentation
+          )
+        end
+
+        def make_request(request_name, **params)
+          @server_client.make_addon_request(
+            FactoryBot::ADDON_NAME,
+            request_name,
+            **params
           )
         end
       end
