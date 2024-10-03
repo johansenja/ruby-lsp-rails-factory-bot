@@ -9,4 +9,4 @@ gem "rake", "~> 13.0"
 
 gem "rubocop", "~> 1.21"
 
-gem "ruby-lsp-rails", git: "https://github.com/johansenja/ruby-lsp-rails.git", branch: "separate-server-addon"
+gem "ruby-lsp-rails", git: "https://github.com/Shopify/ruby-lsp-rails.git", branch: "main"

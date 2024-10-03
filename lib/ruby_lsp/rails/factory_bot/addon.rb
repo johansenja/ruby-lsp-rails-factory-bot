@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 require "ruby_lsp/addon"
-require "ruby_lsp/ruby_lsp_rails/server_addon"
 require "ruby_lsp/ruby_lsp_rails/runner_client"
 
 require_relative "completion"
 require_relative "hover"
 require_relative "addon_name"
+require_relative "../factory_bot"
 
 module RubyLsp
   module Rails
     module FactoryBot
+      # The addon to be registered with ruby-lsp. See https://shopify.github.io/ruby-lsp/add-ons.html
       class Addon < ::RubyLsp::Addon
         def activate(global_state, *)
           runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
