@@ -3,7 +3,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - '**/*.gemspec'
-    - 'vendor/**/*.rb'
+    - '**/vendor/bundle/**/*'
 
 Metrics/BlockLength:
   Exclude:
