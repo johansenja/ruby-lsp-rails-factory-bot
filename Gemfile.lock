@@ -1,26 +1,10 @@
-<<<<<<< HEAD
-=======
-GIT
-  remote: https://github.com/Shopify/ruby-lsp-rails.git
-  revision: 51df5acf4ad9231900c6587d2c92bdcf09a90d0f
-  branch: main
-  specs:
-    ruby-lsp-rails (0.3.16)
-      ruby-lsp (>= 0.18.4, < 0.19.0)
-
->>>>>>> b19470b (Move to ruby-lsp-rails native addon)
 PATH
   remote: .
   specs:
     ruby-lsp-rails-factory-bot (0.2.0)
       factory_bot (~> 6.4.6)
-<<<<<<< HEAD
       ruby-lsp (~> 0.23)
       ruby-lsp-rails (~> 0.4)
-=======
-      ruby-lsp (~> 0.18.4)
-      ruby-lsp-rails
->>>>>>> b19470b (Move to ruby-lsp-rails native addon)
 
 GEM
   remote: https://rubygems.org/
@@ -90,11 +74,9 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
-<<<<<<< HEAD
+    rubocop-sorbet (0.8.7)
+      rubocop (>= 1)
     ruby-lsp (0.23.10)
-=======
-    ruby-lsp (0.18.4)
->>>>>>> b19470b (Move to ruby-lsp-rails native addon)
       language_server-protocol (~> 3.17.0)
       prism (>= 1.2, < 2.0)
       rbs (>= 3, < 4)
@@ -117,6 +99,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec
   rubocop (~> 1.21)
+  rubocop-sorbet
   ruby-lsp-rails-factory-bot!
 
 BUNDLED WITH

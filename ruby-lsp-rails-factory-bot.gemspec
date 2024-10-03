@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ruby-lsp", "~> 0.23"
   spec.add_dependency "ruby-lsp-rails", RubyLsp::Rails::FactoryBot::REQUIRED_RUBY_LSP_RAILS_VERSION
 
+  spec.add_development_dependency "rubocop-sorbet"
   spec.add_development_dependency "rspec"
 
   # For more information and examples about making a new gem, check out our
