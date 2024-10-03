@@ -2,6 +2,8 @@
 
 require "ruby_lsp/internal"
 
+require_relative "addon_name"
+
 module RubyLsp
   module Rails
     module FactoryBot
@@ -57,8 +59,10 @@ module RubyLsp
         private
 
         def handle_attribute(factory_name, node, value = "")
-          @server_client.get_attributes(factory_name: factory_name, name: value)&.each do |attr|
-            $stderr.write "attribute", attr
+          make_request(
+            :attributes,
+            factory_name: factory_name, name: value
+          )&.each do |attr|
             label_details = Interface::CompletionItemLabelDetails.new(
               description: attr[:type],
             )
@@ -79,8 +83,10 @@ module RubyLsp
         end
 
         def handle_trait(factory_name, node, value = "")
-          @server_client.get_traits(factory_name: factory_name, name: value)&.each do |tr|
-            $stderr.write "trait", tr
+          make_request(
+            :traits,
+            factory_name: factory_name, name: value
+          )&.each do |tr|
             label_details = Interface::CompletionItemLabelDetails.new(
               description: tr[:owner],
             )
@@ -103,8 +109,7 @@ module RubyLsp
         end
 
         def handle_factory(node, name)
-          @server_client.get_factories(name: name)&.each do |fact|
-            $stderr.write "factory", fact
+          make_request(:factories, name: name)&.each do |fact|
             @response_builder << Interface::CompletionItem.new(
               label: fact[:name],
               filter_text: fact[:name],
@@ -121,6 +126,14 @@ module RubyLsp
               }
             )
           end
+        end
+
+        def make_request(request_name, **params)
+          @server_client.make_addon_request(
+            FactoryBot::ADDON_NAME,
+            request_name,
+            **params
+          )
         end
       end
     end

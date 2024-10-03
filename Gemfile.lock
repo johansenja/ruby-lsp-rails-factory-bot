@@ -1,17 +1,17 @@
 GIT
   remote: https://github.com/johansenja/ruby-lsp-rails.git
-  revision: 31533663d38992acdc6f4d3ba5d41b3e9c83fd58
-  branch: extend-runtime-server
+  revision: 6cb9bb67f7d3c15d3c0784918d861cfd03fb5635
+  branch: separate-server-addon
   specs:
-    ruby-lsp-rails (0.3.13)
-      ruby-lsp (>= 0.17.12, < 0.18.0)
+    ruby-lsp-rails (0.3.16)
+      ruby-lsp (>= 0.18.4, < 0.19.0)
 
 PATH
   remote: .
   specs:
     ruby-lsp-rails-factory-bot (0.1.0)
       factory_bot (~> 6.4.6)
-      ruby-lsp (~> 0.17.17)
+      ruby-lsp (~> 0.18.4)
       ruby-lsp-rails
 
 GEM
@@ -50,7 +50,7 @@ GEM
     racc (1.8.0)
     rainbow (3.1.1)
     rake (13.2.1)
-    rbs (3.5.3)
+    rbs (3.6.0)
       logger
     regexp_parser (2.9.2)
     rexml (3.3.2)
@@ -68,14 +68,14 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
-    ruby-lsp (0.17.17)
+    ruby-lsp (0.18.4)
       language_server-protocol (~> 3.17.0)
       prism (~> 1.0)
       rbs (>= 3, < 4)
       sorbet-runtime (>= 0.5.10782)
     ruby-progressbar (1.13.0)
     securerandom (0.3.1)
-    sorbet-runtime (0.5.11554)
+    sorbet-runtime (0.5.11589)
     strscan (3.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)

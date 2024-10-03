@@ -1,24 +1,27 @@
 # frozen_string_literal: true
 
 require "ruby_lsp/addon"
-require "ruby_lsp_rails/runner_client"
+require "ruby_lsp/ruby_lsp_rails/server_addon"
+require "ruby_lsp/ruby_lsp_rails/runner_client"
 
 require_relative "completion"
 require_relative "hover"
-require_relative "server_extension"
+require_relative "addon_name"
 
 module RubyLsp
   module Rails
     module FactoryBot
       class Addon < ::RubyLsp::Addon
         def activate(global_state, *)
+          runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
+
           @ruby_index = global_state.index
         end
 
         def deactivate(*); end
 
         def name
-          "ruby-lsp-rails-factory-bot"
+          FactoryBot::ADDON_NAME
         end
 
         def create_completion_listener(response_builder, node_context, dispatcher, uri)
@@ -26,12 +29,12 @@ module RubyLsp
           return unless path&.end_with?("_test.rb") || path&.end_with?("_spec.rb")
           return unless factory_bot_call_args?(node_context)
 
-          Completion.new(response_builder, node_context, dispatcher, RubyLsp::Rails::RunnerClient.instance)
+          Completion.new(response_builder, node_context, dispatcher, runner_client)
         end
 
         def create_hover_listener(response_builder, node_context, dispatcher)
           # TODO: need URI param
-          Hover.new(response_builder, node_context, dispatcher, RubyLsp::Rails::RunnerClient.instance, @ruby_index)
+          Hover.new(response_builder, node_context, dispatcher, runner_client, @ruby_index)
         end
 
         def workspace_did_change_watched_files(changes)
@@ -39,10 +42,15 @@ module RubyLsp
             change[:uri].match?(/(?:spec|test).+factor.+\.rb/)
           end
 
-          RubyLsp::Rails::RunnerClient.instance.trigger_reload
+          runner_client.trigger_reload
         end
 
         private
+
+        def runner_client
+          @rails_addon ||= ::RubyLsp::Addon.get("Ruby LSP Rails")
+          @rails_addon.rails_runner_client
+        end
 
         FACTORY_BOT_METHODS = %i[
           create
