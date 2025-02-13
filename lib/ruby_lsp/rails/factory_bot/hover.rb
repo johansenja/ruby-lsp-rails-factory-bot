@@ -122,9 +122,9 @@ module RubyLsp
         end
 
         def make_request(request_name, **params)
-          @server_client.make_addon_request(
-            FactoryBot::ADDON_NAME,
-            request_name,
+          @server_client.delegate_request(
+            server_addon_name: FactoryBot::ADDON_NAME,
+            request_name: request_name,
             **params
           )
         end

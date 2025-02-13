@@ -8,10 +8,13 @@ module RubyLsp
       class ServerAddon < RubyLsp::Rails::ServerAddon
         def initialize(stdout)
           super
+
           # TODO: move to before_start hook
-          require "factory_bot"
-          ::FactoryBot.find_definitions
-          ::FactoryBot.factories.each(&:compile)
+          with_progress "ruby-lsp-rails-factory-bot-initialisation" do
+            require "factory_bot"
+            ::FactoryBot.find_definitions
+            ::FactoryBot.factories.each(&:compile)
+          end
         end
 
         def name

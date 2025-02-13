@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby-lsp-rails-factory-bot (0.1.0)
+    ruby-lsp-rails-factory-bot (0.2.0)
       factory_bot (~> 6.4.6)
       ruby-lsp (~> 0.23)
       ruby-lsp-rails (~> 0.4)
