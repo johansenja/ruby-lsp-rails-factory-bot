@@ -34,8 +34,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "factory_bot", "~> 6.4.6"
-  spec.add_dependency "ruby-lsp", "~> 0.18.4"
-  spec.add_dependency "ruby-lsp-rails" # , "~> 0.3.16"
+  spec.add_dependency "ruby-lsp", "~> 0.23"
+  spec.add_dependency "ruby-lsp-rails", "~> 0.4"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
