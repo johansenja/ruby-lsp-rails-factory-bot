@@ -24,10 +24,12 @@ module RubyLsp
         end
 
         def on_call_node_enter(node)
-          return unless FactoryBot::FACTORY_BOT_METHODS.include?(node.name) ||
-                        FactoryBot::FACTORY_BOT_METHODS.include?(@node_context.parent.name)
+          call_node = @node_context.call_node
+          return unless call_node
 
-          process_arguments_pattern(node, node.arguments)
+          return unless FactoryBot::FACTORY_BOT_METHODS.include?(call_node.name)
+
+          process_arguments_pattern(node, call_node.arguments&.arguments)
         rescue StandardError => e
           $stderr.write(e, e.backtrace)
         end
@@ -46,7 +48,7 @@ module RubyLsp
             [Prism::SymbolNode => _factory_name_node, *, Prism::HashNode => _kw_node] |
             [Prism::SymbolNode => _factory_name_node, *, Prism::CallNode => _call_node]
 
-            attr_name = _call_node ? _call_node.message : _kw_node.elements.last.key.value&.to_s
+            attr_name = _call_node ? _call_node.message : _kw_node.elements.last.key.name&.to_s
             handle_attribute(node_string_value(_factory_name_node), node, attr_name)
           else
             nil
