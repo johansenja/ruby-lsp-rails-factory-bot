@@ -108,7 +108,7 @@ module RubyLsp
         def make_request(request_name, **params)
           resp = @server_client.delegate_request(
             server_addon_name: FactoryBot::ADDON_NAME,
-            request_name: request_name,
+            request_name: request_name.to_s,
             **params
           )
           resp[:result] if resp
