@@ -109,7 +109,7 @@ module RubyLsp
           resp = @server_client.delegate_request(
             server_addon_name: FactoryBot::ADDON_NAME,
             request_name: request_name.to_s,
-            **params
+            **params,
           )
           resp[:result] if resp
         end

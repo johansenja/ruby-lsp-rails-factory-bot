@@ -51,7 +51,7 @@ module RubyLsp
         def runner_client
           @rails_addon ||= ::RubyLsp::Addon.get(
             "Ruby LSP Rails",
-            ::RubyLsp::Rails::FactoryBot::REQUIRED_RUBY_LSP_RAILS_VERSION
+            ::RubyLsp::Rails::FactoryBot::REQUIRED_RUBY_LSP_RAILS_VERSION,
           )
           @rails_addon.rails_runner_client
         end
