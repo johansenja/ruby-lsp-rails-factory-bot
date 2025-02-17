@@ -14,10 +14,13 @@ module RubyLsp
     module FactoryBot
       # The addon to be registered with ruby-lsp. See https://shopify.github.io/ruby-lsp/add-ons.html
       class Addon < ::RubyLsp::Addon
-        def activate(global_state, *)
+        def activate(global_state, outgoing_queue)
           runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
 
           @ruby_index = global_state.index
+
+          @outgoing_queue = outgoing_queue
+          log "Activating #{name} add-on v#{VERSION}"
         end
 
         def deactivate(*); end
@@ -67,6 +70,12 @@ module RubyLsp
         def factory_bot_call_args?(node_context)
           node_context.call_node && FACTORY_BOT_METHODS.include?(node_context.call_node.name)
           true
+        end
+
+        def log(msg)
+          return unless @outgoing_queue
+
+          @outgoing_queue << Notification.window_log_message(msg)
         end
       end
     end

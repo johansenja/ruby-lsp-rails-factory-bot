@@ -10,11 +10,11 @@ module RubyLsp
     module FactoryBot
       # The addon for the ruby-lsp-rails server runtime
       class ServerAddon < RubyLsp::Rails::ServerAddon
-        def initialize(stdout)
+        def initialize(stdout, stderr, capabilities)
           super
 
           # TODO: move to before_start hook
-          with_progress "ruby-lsp-rails-factory-bot-initialisation" do
+          with_progress "ruby-lsp-rails-factory-bot-1", "initialisation" do
             require "factory_bot"
             ::FactoryBot.find_definitions
             ::FactoryBot.factories.each(&:compile)
@@ -33,7 +33,7 @@ module RubyLsp
             collection = AttributeHandler.new.execute(params)
           end
 
-          write_response({ result: collection })
+          send_result(collection)
         end
       end
     end
