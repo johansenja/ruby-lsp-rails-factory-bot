@@ -7,6 +7,7 @@ require_relative "completion"
 require_relative "hover"
 require_relative "addon_name"
 require_relative "../factory_bot"
+require_relative "../../../ruby_lsp_rails_factory_bot"
 
 module RubyLsp
   module Rails
