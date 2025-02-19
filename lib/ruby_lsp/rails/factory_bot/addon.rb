@@ -73,7 +73,7 @@ module RubyLsp
         end
 
         def log(msg)
-          return unless @outgoing_queue
+          return if !@outgoing_queue || @outgoing_queue.closed?
 
           @outgoing_queue << Notification.window_log_message(msg)
         end
