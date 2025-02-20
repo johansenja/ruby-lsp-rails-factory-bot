@@ -12,12 +12,13 @@ module RubyLsp
 
           def fetch(params)
             name = params[:name]
-            ::FactoryBot.factories.select do |f|
+            factories = ::FactoryBot.factories.select do |f|
               name.nil? || name.empty? ? true : f.name.to_s.include?(params[:name])
             end
+            return factories, nil
           end
 
-          def serialise(factories)
+          def serialise(factories, *)
             factories.map do |fact|
               model_class = fact.send :class_name
 
