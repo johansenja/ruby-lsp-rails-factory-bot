@@ -34,7 +34,7 @@ module RubyLsp
 
           ensure_addon_registered!
 
-          Completion.new(response_builder, node_context, dispatcher, runner_client)
+          # Completion.new(response_builder, node_context, dispatcher, runner_client)
         end
 
         # TODO: need URI param to be able to filter by file name
