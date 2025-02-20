@@ -8,10 +8,6 @@ module RubyLsp
   module Rails
     module FactoryBot
       # The listener that is created when the user requests autocomplete at the relevant time.
-      #
-      # NOTE: autocompletion is only triggered on certain node types - almost exclusively call nodes
-      # and constants IIRC, so you cannot currently receive autocomplete options for symbols (eg.
-      # factory or trait names) :/
       class Completion
         include RubyLsp::Requests::Support::Common
 

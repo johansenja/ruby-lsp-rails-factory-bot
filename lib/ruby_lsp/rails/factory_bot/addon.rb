@@ -27,8 +27,8 @@ module RubyLsp
           FactoryBot::ADDON_NAME
         end
 
-        def create_completion_listener(response_builder, node_context, dispatcher, uri)
-          ensure_addon_registered!
+        def create_completion_listener(response_builder, node_context, dispatcher, _uri)
+          register_addon!
           Completion.new(response_builder, node_context, dispatcher, runner_client)
         end
 
@@ -68,18 +68,6 @@ module RubyLsp
             ::RubyLsp::Rails::FactoryBot::REQUIRED_RUBY_LSP_RAILS_VERSION,
           )
           @rails_addon.rails_runner_client
-        end
-
-        FACTORY_BOT_METHODS = %i[
-          create
-          build
-          build_stubbed
-          attributes_for
-        ].flat_map { |attr| [attr, :"#{attr}_list", :"#{attr}_pair"] }.freeze
-
-        def factory_bot_call_args?(node_context)
-          node_context.call_node && FACTORY_BOT_METHODS.include?(node_context.call_node.name)
-          true
         end
 
         def log(msg)
