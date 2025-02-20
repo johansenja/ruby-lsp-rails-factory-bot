@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "ruby_lsp/addon"
-require "ruby_lsp/ruby_lsp_rails/runner_client"
+require "ruby_lsp/ruby_lsp_rails/addon"
 
 require_relative "completion"
 require_relative "hover"
@@ -15,8 +15,6 @@ module RubyLsp
       # The addon to be registered with ruby-lsp. See https://shopify.github.io/ruby-lsp/add-ons.html
       class Addon < ::RubyLsp::Addon
         def activate(global_state, outgoing_queue)
-          runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
-
           @ruby_index = global_state.index
 
           @outgoing_queue = outgoing_queue
@@ -34,11 +32,18 @@ module RubyLsp
           return unless path&.end_with?("_test.rb") || path&.end_with?("_spec.rb")
           return unless factory_bot_call_args?(node_context)
 
+          ensure_addon_registered!
+
           Completion.new(response_builder, node_context, dispatcher, runner_client)
         end
 
+        # TODO: need URI param to be able to filter by file name
         def create_hover_listener(response_builder, node_context, dispatcher)
-          # TODO: need URI param
+          unless @addon_registered
+            register_addon!
+            return
+          end
+
           Hover.new(response_builder, node_context, dispatcher, runner_client, @ruby_index)
         end
 
@@ -51,6 +56,16 @@ module RubyLsp
         end
 
         private
+
+        # the addon must be registered as a rails server addon once the server has booted
+        def register_addon!
+          @addon_registered ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+            begin
+              addon_path = File.expand_path("server_addon.rb", __dir__)
+              runner_client.register_server_addon(addon_path)
+              true
+            end
+        end
 
         def runner_client
           @rails_addon ||= ::RubyLsp::Addon.get(
