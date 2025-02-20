@@ -24,7 +24,7 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Completion do
       let(:node) { call_node }
 
       it "provides completion" do
-        allow(server_client).to receive(:make_request).and_return({ result: [{ name: "age" }] })
+        allow(server_client).to receive(:delegate_request).and_return([{ name: "age" }])
 
         subject.on_call_node_enter(node)
         expect(response_builder.first.label).to eq "age"

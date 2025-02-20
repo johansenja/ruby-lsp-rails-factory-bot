@@ -25,7 +25,7 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
       let(:node) { call_node.arguments.arguments[3].elements.first.key } # age:
 
       it "provides completion" do
-        allow(server_client).to receive(:make_request).and_return({ result: [{ name: "age", type: "Integer" }] })
+        allow(server_client).to receive(:delegate_request).and_return([{ name: "age", type: "Integer" }])
 
         subject.on_symbol_node_enter(node)
         expect(response_builder).to eq ["age (Integer)", { category: :documentation }]
