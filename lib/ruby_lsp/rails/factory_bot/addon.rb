@@ -27,15 +27,10 @@ module RubyLsp
           FactoryBot::ADDON_NAME
         end
 
-        # def create_completion_listener(response_builder, node_context, dispatcher, uri)
-        #   path = uri.to_standardized_path
-        #   return unless path&.end_with?("_test.rb") || path&.end_with?("_spec.rb")
-        #   return unless factory_bot_call_args?(node_context)
-
-        #   ensure_addon_registered!
-
-        #   Completion.new(response_builder, node_context, dispatcher, runner_client)
-        # end
+        def create_completion_listener(response_builder, node_context, dispatcher, uri)
+          ensure_addon_registered!
+          Completion.new(response_builder, node_context, dispatcher, runner_client)
+        end
 
         # TODO: need URI param to be able to filter by file name
         def create_hover_listener(response_builder, node_context, dispatcher)
