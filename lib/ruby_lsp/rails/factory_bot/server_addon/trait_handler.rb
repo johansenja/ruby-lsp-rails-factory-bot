@@ -17,7 +17,8 @@ module RubyLsp
             defined_traits = defined_traits(factory, trait_name_partial)
             internal_traits = internal_traits(factory.send(:class_name), trait_name_partial)
 
-            defined_traits.concat(internal_traits)
+            traits = defined_traits.concat(internal_traits)
+            return traits, nil
           rescue KeyError
             # FactoryBot throws a KeyError if the factory isn't found, so nothing to do here
           end
@@ -32,7 +33,7 @@ module RubyLsp
             end
           end
 
-          def serialise(traits)
+          def serialise(traits, *)
             traits.map do |tr|
               source_location = block_for(tr)&.source_location
               {

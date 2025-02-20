@@ -23,7 +23,7 @@ module RubyLsp
 
         def name = FactoryBot::ADDON_NAME
 
-        def execute(request, params)
+        def execute(request, params) # rubocop:disable Metrics/MethodLength
           case request.to_sym
           when :factories
             collection = FactoryHandler.new.execute(params)
@@ -31,9 +31,13 @@ module RubyLsp
             collection = TraitHandler.new.execute(params)
           when :attributes
             collection = AttributeHandler.new.execute(params)
+          else
+            return send_error_response("#{request} no supported")
           end
 
-          send_result(collection)
+          send_result(collection || [])
+        rescue => e # rubocop:disable Style/RescueStandardError
+          send_error_response("An error occurred while fetching #{request} - #{e}")
         end
       end
     end
