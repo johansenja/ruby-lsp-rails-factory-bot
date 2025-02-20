@@ -27,7 +27,7 @@ module RubyLsp
           FactoryBot::ADDON_NAME
         end
 
-        def create_completion_listener(response_builder, node_context, dispatcher, uri)
+        def create_completion_listener(response_builder, node_context, dispatcher, uri) # rubocop:disable Lint/UnusedMethodArgument
           path = uri.to_standardized_path
           return unless path&.end_with?("_test.rb") || path&.end_with?("_spec.rb")
           return unless factory_bot_call_args?(node_context)
