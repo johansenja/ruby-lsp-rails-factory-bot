@@ -32,6 +32,51 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Completion do
       end
     end
 
+    context "for attributes already present" do
+      let(:code) { "create :enterprise, description: 'foobar', descrip" }
+      let(:node) { call_node }
+
+      it "doesn't suggest them again" do
+        allow(server_client).to receive(:delegate_request).and_return(
+          [{ name: "description" }, { name: "description_long" }],
+        )
+
+        subject.on_call_node_enter(node)
+        expect(response_builder.first.label).to eq "description_long"
+        expect(response_builder.length).to eq 1
+      end
+    end
+
+    context "for attributes already present" do
+      let(:code) { "create :user, :with_attached_avatar, :wit" }
+      let(:node) { call_node }
+
+      it "doesn't suggest traits already present" do
+        allow(server_client).to receive(:delegate_request).and_return(
+          [{ name: "with_attached_avatar" }, { name: "with_bio" }],
+        )
+
+        subject.on_call_node_enter(node)
+        expect(response_builder.first.label).to eq "with_bio"
+        expect(response_builder.length).to eq 1
+      end
+    end
+
+    context "for incomplete factory names" do
+      let(:code) { "create :ente" }
+      let(:node) { call_node }
+
+      it "provides suggestions" do
+        allow(server_client).to receive(:delegate_request).and_return(
+          [{ name: "enterprise" }, { name: "medium_enterprise" }, { name: "small_enterprise" }],
+        )
+
+        subject.on_call_node_enter(node)
+        expect(response_builder.first.label).to eq "enterprise"
+        expect(response_builder.length).to eq 3
+      end
+    end
+
     context "for irrelevant methods" do
       let(:code) { "puts a" }
       let(:node) { call_node.arguments.arguments[0] }
