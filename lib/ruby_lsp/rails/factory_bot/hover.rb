@@ -43,8 +43,12 @@ module RubyLsp
           in [^symbol_node, *]
             handle_factory(symbol_node)
           in [Prism::SymbolNode => _factory_node, *, ^symbol_node] |
+             [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::KeywordHashNode] |
+             [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::HashNode] |
              [Prism::SymbolNode => _factory_node, ^symbol_node, *] |
-             [Prism::SymbolNode => _factory_node, Integer, ^symbol_node, *]
+             [Prism::SymbolNode => _factory_node, Prism::IntegerNode, ^symbol_node, *] |
+             [Prism::SymbolNode => _factory_node, Prism::IntegerNode, *, ^symbol_node, Prism::KeywordHashNode] |
+             [Prism::SymbolNode => _factory_node, Prism::IntegerNode, *, ^symbol_node, Prism::HashNode]
 
             handle_trait(symbol_node, _factory_node)
 
@@ -88,6 +92,11 @@ module RubyLsp
           @response_builder.push(hint, category: :documentation)
         end
 
+        def trait_tooltip(trait, factory_name)
+          source = trait[:source]&.length&.positive? ? trait[:source] : nil
+          source || "#{trait[:name]} (trait of #{trait[:owner] || factory_name})"
+        end
+
         def handle_trait(symbol_node, factory_node)
           factory_name = factory_node.value.to_s
           trait_name = symbol_node.value.to_s
@@ -98,10 +107,7 @@ module RubyLsp
 
           return unless trait
 
-          @response_builder.push(
-            "#{trait[:name]} (trait of #{trait[:owner] || factory_name})",
-            category: :documentation,
-          )
+          @response_builder.push(trait_tooltip(trait, factory_name), category: :documentation)
         end
 
         def make_request(request_name, **params)
