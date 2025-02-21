@@ -20,6 +20,24 @@ Hover over an attribute or factory definition
 
 ![lsp-factory-bot-hover](https://github.com/user-attachments/assets/6f570288-3cf3-4d12-acf9-71c86e834cd8)
 
+Receive completion suggestions as you type
+
+![lsp-factory-bot-completion](https://github.com/user-attachments/assets/4255a86a-8f36-4de2-8d10-8cb5a3f49e50)
+
+### Supports
+
+|         | Hover           | Completion  | Go to definition |
+| ------------- |-------------| -----| ----|
+| Factory name      | ✅ | ⭕️ | ❌ |
+| Trait      | ✅      |  ⭕️ | ❌ |
+| Attribute | ✅      |  ✅ | ❌ |
+
+Notes:
+
+- The extension has "understanding" of factory/trait completion items, but due to limitations on when ruby-lsp displays the completion suggestions, they aren't visible for Symbols (eg. factory/trait names) :/ though they happen to be visible for symbols in Hash/Kw notation (ie with `:` after - `key: ...`)
+- Go to definition not supported yet but might come soon
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
