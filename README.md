@@ -24,13 +24,20 @@ Receive completion suggestions as you type
 
 ![lsp-factory-bot-completion](https://github.com/user-attachments/assets/4255a86a-8f36-4de2-8d10-8cb5a3f49e50)
 
+Click through to definitions
+
+![lsp-factory-bot-definition-trait](https://github.com/user-attachments/assets/92a4b224-b587-442d-9463-50d526872039)
+
+![lsp-factory-bot-definition-attribute](https://github.com/user-attachments/assets/d8650678-6759-42c8-b015-0fdbd4045494)
+
+
 ### Supports
 
 |         | Hover           | Completion  | Go to definition |
 | ------------- |-------------| -----| ----|
-| Factory name      | ✅ | ⭕️ | ❌ |
-| Trait      | ✅      |  ⭕️ | ✅ |
 | Attribute | ✅      |  ✅ | ✅ |
+| Trait      | ✅      |  ⭕️ | ✅ 
+| Factory name      | ✅ | ⭕️ | ❌ ||
 
 Notes:
 
