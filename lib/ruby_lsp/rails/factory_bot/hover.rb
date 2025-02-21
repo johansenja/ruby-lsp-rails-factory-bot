@@ -43,8 +43,12 @@ module RubyLsp
           in [^symbol_node, *]
             handle_factory(symbol_node)
           in [Prism::SymbolNode => _factory_node, *, ^symbol_node] |
+             [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::KeywordHashNode] |
+             [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::HashNode] |
              [Prism::SymbolNode => _factory_node, ^symbol_node, *] |
-             [Prism::SymbolNode => _factory_node, Integer, ^symbol_node, *]
+             [Prism::SymbolNode => _factory_node, Prism::IntegerNode, ^symbol_node, *] |
+             [Prism::SymbolNode => _factory_node, Prism::IntegerNode, *, ^symbol_node, Prism::KeywordHashNode] |
+             [Prism::SymbolNode => _factory_node, Prism::IntegerNode, *, ^symbol_node, Prism::HashNode]
 
             handle_trait(symbol_node, _factory_node)
 

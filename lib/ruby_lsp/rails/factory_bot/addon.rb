@@ -32,13 +32,8 @@ module RubyLsp
           Completion.new(response_builder, node_context, dispatcher, runner_client)
         end
 
-        # TODO: need URI param to be able to filter by file name
         def create_hover_listener(response_builder, node_context, dispatcher)
-          unless @addon_registered
-            register_addon!
-            return
-          end
-
+          register_addon!
           Hover.new(response_builder, node_context, dispatcher, runner_client, @ruby_index)
         end
 
