@@ -38,7 +38,7 @@ module RubyLsp
           Hover.new(response_builder, node_context, dispatcher, runner_client, @ruby_index)
         end
 
-        def create_definition_listener(response_builder, uri, node_context, dispatcher)
+        def create_definition_listener(response_builder, _uri, node_context, dispatcher)
           register_addon!
           Definition.new(response_builder, node_context, dispatcher, runner_client)
         end
