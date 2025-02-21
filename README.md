@@ -29,13 +29,13 @@ Receive completion suggestions as you type
 |         | Hover           | Completion  | Go to definition |
 | ------------- |-------------| -----| ----|
 | Factory name      | ✅ | ⭕️ | ❌ |
-| Trait      | ✅      |  ⭕️ | ❌ |
-| Attribute | ✅      |  ✅ | ❌ |
+| Trait      | ✅      |  ⭕️ | ✅ |
+| Attribute | ✅      |  ✅ | ✅ |
 
 Notes:
 
 - The extension has "understanding" of factory/trait completion items, but due to limitations on when ruby-lsp displays the completion suggestions, they aren't visible for Symbols (eg. factory/trait names) :/ though they happen to be visible for symbols in Hash/Kw notation (ie with `:` after - `key: ...`)
-- Go to definition not supported yet but might come soon
+- Factory definition is not supported at the moment (current limitation of factory bot), but might come in due course
 
 
 ## Development
