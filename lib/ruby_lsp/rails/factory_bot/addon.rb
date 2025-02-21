@@ -55,7 +55,7 @@ module RubyLsp
         # the addon must be registered as a rails server addon once the server has booted
         def register_addon!
           @addon_registered ||= # rubocop:disable Naming/MemoizedInstanceVariableName
-             begin
+            begin
               addon_path = File.expand_path("server_addon.rb", __dir__)
               runner_client.register_server_addon(addon_path)
               true

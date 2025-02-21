@@ -8,7 +8,7 @@ module RubyLsp
   module Rails
     module FactoryBot
       # The listener that is created when the user requests autocomplete at the relevant time.
-      class Completion
+      class Completion # rubocop:disable Metrics/ClassLength
         include RubyLsp::Requests::Support::Common
 
         def initialize(response_builder, node_context, dispatcher, server_client)
