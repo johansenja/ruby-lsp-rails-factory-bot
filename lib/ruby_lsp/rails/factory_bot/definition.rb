@@ -7,15 +7,14 @@ require_relative "addon_name"
 module RubyLsp
   module Rails
     module FactoryBot
-      # Hover listener - calls the registered methods when the appropriate nodes are entered
-      class Hover
+      # Definition listener - calls the registered methods when the appropriate nodes are entered
+      class Definition
         include RubyLsp::Requests::Support::Common
 
-        def initialize(response_builder, node_context, dispatcher, server_client, ruby_index)
+        def initialize(response_builder, node_context, dispatcher, server_client)
           @response_builder = response_builder
           @node_context = node_context
           @server_client = server_client
-          @ruby_index = ruby_index
 
           dispatcher.register self, :on_symbol_node_enter
         end
@@ -41,7 +40,9 @@ module RubyLsp
         def process_arguments_pattern(symbol_node, arguments) # rubocop:disable Metrics/MethodLength
           case arguments
           in [^symbol_node, *]
-            handle_factory(symbol_node)
+            # factory location currently not available
+            #
+            # handle_factory(symbol_node)
           in [Prism::SymbolNode => _factory_node, *, ^symbol_node] |
              [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::KeywordHashNode] |
              [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::HashNode] |
@@ -68,33 +69,17 @@ module RubyLsp
             factory_name: factory_node.value.to_s, name: name,
           )&.find { |attr| attr[:name] == name }
 
-          return unless attribute
+          return unless attribute && attribute[:source_location]&.length&.positive?
 
-          @response_builder.push(
-            "#{attribute[:name]} (#{attribute[:type]})",
-            category: :documentation,
-          )
+          @response_builder << Support::LocationBuilder.line_location_from_s(attribute[:source_location].join(":"))
         end
 
         def handle_factory(symbol_node)
           name = symbol_node.value.to_s
           factory = make_request(:factories, name: name)&.find { |f| f[:name] == name }
-          return unless factory
+          return unless factory && factory[:source_location]&.length&.positive?
 
-          index_entry = @ruby_index.first_unqualified_const(factory[:name])
-
-          hint = if index_entry
-                   markdown_from_index_entries(factory[:model_class], index_entry)
-                 else
-                   "#{factory[:name]} (#{factory[:model_class]})"
-                 end
-
-          @response_builder.push(hint, category: :documentation)
-        end
-
-        def trait_tooltip(trait, factory_name)
-          source = trait[:source]&.length&.positive? ? trait[:source] : nil
-          source || "#{trait[:name]} (trait of #{trait[:owner] || factory_name})"
+          @response_builder << Support::LocationBuilder.line_location_from_s(factory[:source_location].join(":"))
         end
 
         def handle_trait(symbol_node, factory_node)
@@ -105,9 +90,9 @@ module RubyLsp
             tr[:name] == trait_name
           end
 
-          return unless trait
+          return unless trait && trait[:source_location]&.length&.positive?
 
-          @response_builder.push(trait_tooltip(trait, factory_name), category: :documentation)
+          @response_builder << Support::LocationBuilder.line_location_from_s(trait[:source_location].join(":"))
         end
 
         def make_request(request_name, **params)

@@ -5,6 +5,7 @@ require "ruby_lsp/ruby_lsp_rails/addon"
 
 require_relative "completion"
 require_relative "hover"
+require_relative "definition"
 require_relative "addon_name"
 require_relative "../factory_bot"
 require_relative "../../../ruby_lsp_rails_factory_bot"
@@ -35,6 +36,11 @@ module RubyLsp
         def create_hover_listener(response_builder, node_context, dispatcher)
           register_addon!
           Hover.new(response_builder, node_context, dispatcher, runner_client, @ruby_index)
+        end
+
+        def create_definition_listener(response_builder, _uri, node_context, dispatcher)
+          register_addon!
+          Definition.new(response_builder, node_context, dispatcher, runner_client)
         end
 
         def workspace_did_change_watched_files(changes)
