@@ -8,11 +8,7 @@ module RubyLsp
   module Rails
     module FactoryBot
       # The listener that is created when the user requests autocomplete at the relevant time.
-      #
-      # NOTE: autocompletion is only triggered on certain node types - almost exclusively call nodes
-      # and constants IIRC, so you cannot currently receive autocomplete options for symbols (eg.
-      # factory or trait names) :/
-      class Completion
+      class Completion # rubocop:disable Metrics/ClassLength
         include RubyLsp::Requests::Support::Common
 
         def initialize(response_builder, node_context, dispatcher, server_client)
@@ -24,10 +20,12 @@ module RubyLsp
         end
 
         def on_call_node_enter(node)
-          return unless FactoryBot::FACTORY_BOT_METHODS.include?(node.name) ||
-                        FactoryBot::FACTORY_BOT_METHODS.include?(@node_context.parent.name)
+          call_node = @node_context.call_node
+          return unless call_node
 
-          process_arguments_pattern(node, node.arguments)
+          return unless FactoryBot::FACTORY_BOT_METHODS.include?(call_node.name)
+
+          process_arguments_pattern(node, call_node.arguments&.arguments)
         rescue StandardError => e
           $stderr.write(e, e.backtrace)
         end
@@ -40,26 +38,50 @@ module RubyLsp
             handle_factory(factory_name_node, node_string_value(factory_name_node))
 
           in [Prism::SymbolNode => factory_name_node, *, Prism::SymbolNode => trait_node]
-            handle_trait(node_string_value(factory_name_node), node, node_string_value(trait_node))
+            already_used_traits = gather_already_used_traits(arguments)
+            handle_trait(
+              node_string_value(factory_name_node), node, already_used_traits, node_string_value(trait_node),
+            )
 
           in [Prism::SymbolNode => _factory_name_node, *, Prism::KeywordHashNode => _kw_node] |
             [Prism::SymbolNode => _factory_name_node, *, Prism::HashNode => _kw_node] |
             [Prism::SymbolNode => _factory_name_node, *, Prism::CallNode => _call_node]
 
-            attr_name = _call_node ? _call_node.message : _kw_node.elements.last.key.value&.to_s
-            handle_attribute(node_string_value(_factory_name_node), node, attr_name)
+            attr_name = node_string_value(_call_node || _kw_node.elements.last.key)
+            already_used_attrs = gather_already_used_attrs(_kw_node)
+            handle_attribute(node_string_value(_factory_name_node), node, already_used_attrs, attr_name)
           else
             nil
           end
         end
 
         def node_string_value(node)
-          node.value.to_s
+          case node
+          when Prism::CallNode
+            node.name.to_s
+          when Prism::SymbolNode
+            node.value.to_s
+          when nil
+            ""
+          end
         end
 
-        def handle_attribute(factory_name, node, value = "")
+        def gather_already_used_attrs(kw_node)
+          attrs = Set.new
+          return attrs unless kw_node
+
+          kw_node.elements.each do |e|
+            attrs.add(node_string_value(e.key))
+          end
+
+          attrs
+        end
+
+        def handle_attribute(factory_name, node, already_used_attrs, value = "")
           range = range_from_node(node)
           make_request(:attributes, factory_name: factory_name, name: value)&.each do |attr|
+            next if already_used_attrs.member?(attr[:name].to_s)
+
             label_details = Interface::CompletionItemLabelDetails.new(description: attr[:type])
 
             @response_builder << serialise_attribute(attr[:name], label_details, attr[:owner], range)
@@ -77,24 +99,39 @@ module RubyLsp
           )
         end
 
-        def handle_trait(factory_name, node, value = "")
+        def gather_already_used_traits(arguments)
+          trait_names = Set.new
+          # skip the first one because it's factory name
+          1.upto(arguments.length - 1) do |i|
+            arg = arguments[i]
+            next if arg.is_a?(Prism::IntegerNode)
+            break unless arg.is_a?(Prism::SymbolNode)
+
+            trait_names.add(arg.value.to_s)
+          end
+          trait_names
+        end
+
+        def handle_trait(factory_name, node, already_used_traits, value = "")
           make_request(:traits, factory_name: factory_name, name: value)&.each do |tr|
+            next if already_used_traits.member?(tr[:name].to_s)
+
             label_details = Interface::CompletionItemLabelDetails.new(description: tr[:owner])
             range = range_from_node(node)
             name = tr[:name]
 
-            @response_builder << serialise_trait(name, range, label_details)
+            @response_builder << serialise_trait(name, range, label_details, tr[:owner])
           end
         end
 
-        def serialise_trait(name, range, label_details)
+        def serialise_trait(name, range, label_details, owner)
           Interface::CompletionItem.new(
             label: name,
             filter_text: name,
             label_details: label_details,
             text_edit: Interface::TextEdit.new(range: range, new_text: name),
             kind: Constant::CompletionItemKind::PROPERTY,
-            data: { owner_name: nil, guessed_type: tr[:owner] },
+            data: { owner_name: nil, guessed_type: owner },
           )
         end
 

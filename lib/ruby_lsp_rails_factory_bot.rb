@@ -3,7 +3,7 @@
 module RubyLsp
   module Rails
     module FactoryBot
-      VERSION = "0.2.0"
+      VERSION = "0.3.0"
       REQUIRED_RUBY_LSP_RAILS_VERSION = "~> 0.4"
     end
   end
