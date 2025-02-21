@@ -99,7 +99,7 @@ module RubyLsp
           return unless trait
 
           @response_builder.push(
-            "#{trait[:name]} (trait of #{trait[:owner] || factory_name})",
+            trait[:source].presence || "#{trait[:name]} (trait of #{trait[:owner] || factory_name})",
             category: :documentation,
           )
         end
