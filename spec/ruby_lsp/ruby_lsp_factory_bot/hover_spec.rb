@@ -80,7 +80,9 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
       end
 
       it "provides a tooltip for a trait with source" do
-        allow(server_client).to receive(:delegate_request).and_return([{ name: "with_name", source: "with_name { name { 'Geoff' } }" }])
+        allow(server_client).to receive(:delegate_request).and_return(
+          [{ name: "with_name", source: "with_name { name { 'Geoff' } }" }],
+        )
 
         subject.on_symbol_node_enter(node)
         expect(response_builder).to eq ["with_name { name { 'Geoff' } }", { category: :documentation }]
