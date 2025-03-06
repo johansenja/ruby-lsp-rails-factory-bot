@@ -61,6 +61,12 @@ module RubyLsp
           end
         end
 
+        def build_response(title, documentation, link)
+          @response_builder.push(title, category: :title) if title
+          @response_builder.push(documentation, category: :documentation) if documentation
+          @response_builder.push(link, category: :links) if link
+        end
+
         def handle_attribute(symbol_node, factory_node)
           name = symbol_node.value.to_s
           attribute = make_request(
@@ -70,11 +76,14 @@ module RubyLsp
 
           return unless attribute
 
-          @response_builder.push(attribute[:name].to_s, category: :title)
-          @response_builder.push(attribute[:type].to_s, category: :documentation)
+          build_response(attribute[:name].to_s, attribute[:type].to_s, link_location(attribute[:source_location]))
+        end
 
-          link = link_location(attribute[:source_location])
-          @response_builder.push(link, category: :links) if link
+        def factory_documentation(factory)
+          index_entry = @ruby_index.first_unqualified_const(factory[:name])
+          return markdown_from_index_entries(factory[:model_class], index_entry) if index_entry
+
+          "#{factory[:name]} (#{factory[:model_class]})"
         end
 
         def handle_factory(symbol_node)
@@ -82,16 +91,7 @@ module RubyLsp
           factory = make_request(:factories, name: name)&.find { |f| f[:name] == name }
           return unless factory
 
-          index_entry = @ruby_index.first_unqualified_const(factory[:name])
-
-          hint = if index_entry
-                   markdown_from_index_entries(factory[:model_class], index_entry)
-                 else
-                   "#{factory[:name]} (#{factory[:model_class]})"
-                 end
-
-          @response_builder.push(factory[:name], category: :title)
-          @response_builder.push(hint, category: :documentation)
+          build_response(factory[:name], factory_documentation(factory), nil)
         end
 
         def trait_tooltip(trait, factory_name)
@@ -109,11 +109,7 @@ module RubyLsp
 
           return unless trait
 
-          @response_builder.push(trait[:name], category: :title)
-          @response_builder.push(trait_tooltip(trait, factory_name), category: :documentation)
-
-          link = link_location(trait[:source_location])
-          @response_builder.push(link, category: :links) if link
+          build_response(trait[:name], trait_tooltip(trait, factory_name), link_location(trait[:source_location]))
         end
 
         def make_request(request_name, **params)
