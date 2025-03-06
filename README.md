@@ -12,8 +12,6 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
     $ gem install ruby-lsp-rails-factory-bot
 
-Note that this currenlty uses a fork of ruby-lsp-rails (to extend its server to be able to provide factory information).
-
 ## Usage
 
 Hover over a factory name, trait, or attribute
