@@ -3,6 +3,7 @@
 require "ruby_lsp/addon"
 require "ruby_lsp/ruby_lsp_rails/addon"
 
+require_relative "indexing_enhancement"
 require_relative "completion"
 require_relative "hover"
 require_relative "definition"
@@ -40,7 +41,7 @@ module RubyLsp
 
         def create_definition_listener(response_builder, _uri, node_context, dispatcher)
           register_addon!
-          Definition.new(response_builder, node_context, dispatcher, runner_client)
+          Definition.new(response_builder, node_context, dispatcher, runner_client, @ruby_index)
         end
 
         def workspace_did_change_watched_files(changes)

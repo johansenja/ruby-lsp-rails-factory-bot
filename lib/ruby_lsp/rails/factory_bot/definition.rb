@@ -11,10 +11,11 @@ module RubyLsp
       class Definition
         include RubyLsp::Requests::Support::Common
 
-        def initialize(response_builder, node_context, dispatcher, server_client)
+        def initialize(response_builder, node_context, dispatcher, server_client, ruby_index)
           @response_builder = response_builder
           @node_context = node_context
           @server_client = server_client
+          @ruby_index = ruby_index
 
           dispatcher.register self, :on_symbol_node_enter
         end
@@ -40,9 +41,7 @@ module RubyLsp
         def process_arguments_pattern(symbol_node, arguments) # rubocop:disable Metrics/MethodLength
           case arguments
           in [^symbol_node, *]
-            # factory location currently not available
-            #
-            # handle_factory(symbol_node)
+            handle_factory(symbol_node)
           in [Prism::SymbolNode => _factory_node, *, ^symbol_node] |
              [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::KeywordHashNode] |
              [Prism::SymbolNode => _factory_node, *, ^symbol_node, Prism::HashNode] |
@@ -75,11 +74,15 @@ module RubyLsp
         end
 
         def handle_factory(symbol_node)
-          name = symbol_node.value.to_s
-          factory = make_request(:factories, name: name)&.find { |f| f[:name] == name }
-          return unless factory && factory[:source_location]&.length&.positive?
+          factory_index_definition = @ruby_index["#{symbol_node.value.to_s}__FACTORY"]&.first
+          return unless factory_index_definition
 
-          @response_builder << Support::LocationBuilder.line_location_from_s(factory[:source_location].join(":"))
+          if factory_index_definition
+            location =
+              "#{factory_index_definition.uri.path}:#{factory_index_definition.location.start_line}"
+          end
+
+          @response_builder << Support::LocationBuilder.line_location_from_s(location)
         end
 
         def handle_trait(symbol_node, factory_node)
