@@ -70,10 +70,15 @@ module RubyLsp
 
           return unless attribute
 
-          @response_builder.push(
-            "#{attribute[:name]} (#{attribute[:type]})",
-            category: :documentation,
-          )
+          @response_builder.push(attribute[:name].to_s, category: :title)
+          @response_builder.push(attribute[:type].to_s, category: :documentation)
+
+          if attribute[:source_location]&.length&.positive?
+            @response_builder.push(
+              Support::LocationBuilder.line_location_from_s(attribute[:source_location].join(":")),
+              category: :links,
+            )
+          end
         end
 
         def handle_factory(symbol_node)
@@ -89,6 +94,7 @@ module RubyLsp
                    "#{factory[:name]} (#{factory[:model_class]})"
                  end
 
+          @response_builder.push(factory[:name], category: :title)
           @response_builder.push(hint, category: :documentation)
         end
 
@@ -107,7 +113,15 @@ module RubyLsp
 
           return unless trait
 
+          @response_builder.push(trait[:name], category: :title)
           @response_builder.push(trait_tooltip(trait, factory_name), category: :documentation)
+
+          if trait[:source_location]&.length&.positive?
+            @response_builder.push(
+              Support::LocationBuilder.line_location_from_s(trait[:source_location].join(":")),
+              category: :links,
+            )
+          end
         end
 
         def make_request(request_name, **params)
