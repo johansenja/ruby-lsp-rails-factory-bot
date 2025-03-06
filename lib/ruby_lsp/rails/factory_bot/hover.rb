@@ -91,7 +91,14 @@ module RubyLsp
           factory = make_request(:factories, name: name)&.find { |f| f[:name] == name }
           return unless factory
 
-          build_response(factory[:name], factory_documentation(factory), nil)
+          factory_index_definition = @ruby_index["#{factory[:name]}__FACTORY"]&.first
+          if factory_index_definition
+            loc = factory_index_definition.location
+            location =
+              "#{factory_index_definition.uri}#L#{loc.start_line},#{loc.start_column}-#{loc.end_line},#{loc.end_column}"
+          end
+
+          build_response(factory[:name], factory_documentation(factory), location)
         end
 
         def trait_tooltip(trait, factory_name)
