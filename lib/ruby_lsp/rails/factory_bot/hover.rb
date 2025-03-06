@@ -96,7 +96,7 @@ module RubyLsp
 
         def trait_tooltip(trait, factory_name)
           source = trait[:source]&.length&.positive? ? trait[:source] : nil
-          source ? "```ruby\n#{source}\n```" : "#{trait[:name]} (trait of #{trait[:owner] || factory_name})"
+          source ? "```ruby\n#{source}\n```" : "trait of #{trait[:owner] || factory_name}"
         end
 
         def handle_trait(symbol_node, factory_node)
