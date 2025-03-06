@@ -73,12 +73,8 @@ module RubyLsp
           @response_builder.push(attribute[:name].to_s, category: :title)
           @response_builder.push(attribute[:type].to_s, category: :documentation)
 
-          if attribute[:source_location]&.length&.positive?
-            @response_builder.push(
-              Support::LocationBuilder.line_location_from_s(attribute[:source_location].join(":")),
-              category: :links,
-            )
-          end
+          link = link_location(attribute[:source_location])
+          @response_builder.push(link, category: :links) if link
         end
 
         def handle_factory(symbol_node)
@@ -100,7 +96,7 @@ module RubyLsp
 
         def trait_tooltip(trait, factory_name)
           source = trait[:source]&.length&.positive? ? trait[:source] : nil
-          source || "#{trait[:name]} (trait of #{trait[:owner] || factory_name})"
+          source ? "```ruby\n#{source}\n```" : "#{trait[:name]} (trait of #{trait[:owner] || factory_name})"
         end
 
         def handle_trait(symbol_node, factory_node)
@@ -116,12 +112,8 @@ module RubyLsp
           @response_builder.push(trait[:name], category: :title)
           @response_builder.push(trait_tooltip(trait, factory_name), category: :documentation)
 
-          if trait[:source_location]&.length&.positive?
-            @response_builder.push(
-              Support::LocationBuilder.line_location_from_s(trait[:source_location].join(":")),
-              category: :links,
-            )
-          end
+          link = link_location(trait[:source_location])
+          @response_builder.push(link, category: :links) if link
         end
 
         def make_request(request_name, **params)
@@ -130,6 +122,14 @@ module RubyLsp
             request_name: request_name.to_s,
             **params,
           )
+        end
+
+        def link_location(source_location)
+          return unless source_location
+
+          return if source_location.empty?
+
+          "[Definition](#{URI::Generic.from_path(path: source_location[0])}#L#{source_location[1]})"
         end
       end
     end
