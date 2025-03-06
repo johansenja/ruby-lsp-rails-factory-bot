@@ -28,7 +28,10 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
         allow(server_client).to receive(:delegate_request).and_return([{ name: "age", type: "Integer" }])
 
         subject.on_symbol_node_enter(node)
-        expect(response_builder).to eq ["age (Integer)", { category: :documentation }]
+        expect(response_builder).to eq [
+          "age", { category: :title },
+          "Integer", { category: :documentation },
+        ]
       end
 
       context "for create_list" do
@@ -39,7 +42,10 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
           allow(server_client).to receive(:delegate_request).and_return([{ name: "age", type: "Integer" }])
 
           subject.on_symbol_node_enter(node)
-          expect(response_builder).to eq ["age (Integer)", { category: :documentation }]
+          expect(response_builder).to eq [
+            "age", { category: :title },
+            "Integer", { category: :documentation },
+          ]
         end
       end
     end
@@ -52,7 +58,10 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
         allow(server_client).to receive(:delegate_request).and_return([{ name: "user", model_class: "User" }])
 
         subject.on_symbol_node_enter(node)
-        expect(response_builder).to eq ["user (User)", { category: :documentation }]
+        expect(response_builder).to eq [
+          "user", { category: :title },
+          "User", { category: :documentation },
+        ]
       end
 
       context "for create_list" do
@@ -63,7 +72,10 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
           allow(server_client).to receive(:delegate_request).and_return([{ name: "user", model_class: "User" }])
 
           subject.on_symbol_node_enter(node)
-          expect(response_builder).to eq ["user (User)", { category: :documentation }]
+          expect(response_builder).to eq [
+            "user", { category: :title },
+            "User", { category: :documentation },
+          ]
         end
       end
     end
@@ -76,16 +88,23 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
         allow(server_client).to receive(:delegate_request).and_return([{ name: "with_name" }])
 
         subject.on_symbol_node_enter(node)
-        expect(response_builder).to eq ["with_name (trait of user)", { category: :documentation }]
+        expect(response_builder).to eq [
+          "with_name", { category: :title },
+          "trait of user", { category: :documentation },
+        ]
       end
 
       it "provides a tooltip for a trait with source" do
         allow(server_client).to receive(:delegate_request).and_return(
-          [{ name: "with_name", source: "with_name { name { 'Geoff' } }" }],
+          [{ name: "with_name", source: "with_name { name { 'Geoff' } }", source_location: ["/foo.rb", 2] }],
         )
 
         subject.on_symbol_node_enter(node)
-        expect(response_builder).to eq ["with_name { name { 'Geoff' } }", { category: :documentation }]
+        expect(response_builder).to eq [
+          "with_name", { category: :title },
+          "```ruby\nwith_name { name { 'Geoff' } }\n```", { category: :documentation },
+          "[Definition](file:///foo.rb#L2)", { category: :links },
+        ]
       end
 
       context "for create_list" do
@@ -96,7 +115,10 @@ RSpec.describe RubyLsp::Rails::FactoryBot::Hover do
           allow(server_client).to receive(:delegate_request).and_return([{ name: "with_name" }])
 
           subject.on_symbol_node_enter(node)
-          expect(response_builder).to eq ["with_name (trait of user)", { category: :documentation }]
+          expect(response_builder).to eq [
+            "with_name", { category: :title },
+            "trait of user", { category: :documentation },
+          ]
         end
       end
     end

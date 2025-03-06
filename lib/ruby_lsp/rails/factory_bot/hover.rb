@@ -83,7 +83,7 @@ module RubyLsp
           index_entry = @ruby_index.first_unqualified_const(factory[:name])
           return markdown_from_index_entries(factory[:model_class], index_entry) if index_entry
 
-          "#{factory[:name]} (#{factory[:model_class]})"
+          factory[:model_class].to_s
         end
 
         def handle_factory(symbol_node)
