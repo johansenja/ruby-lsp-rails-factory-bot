@@ -26,7 +26,7 @@ module RubyLsp
           # helper - might be best to live elsewhere?
           def block_source(attr)
             blk = block_for(attr)
-            blk.source if blk.respond_to? :source
+            blk.source&.strip_heredoc if blk.respond_to? :source
           end
         end
       end

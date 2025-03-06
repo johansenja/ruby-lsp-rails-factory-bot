@@ -16,9 +16,9 @@ Note that this currenlty uses a fork of ruby-lsp-rails (to extend its server to 
 
 ## Usage
 
-Hover over an attribute or factory definition
+Hover over a factory name, trait, or attribute
 
-![lsp-factory-bot-hover](https://github.com/user-attachments/assets/6f570288-3cf3-4d12-acf9-71c86e834cd8)
+![lsp-factory-bot-hover-all](https://github.com/user-attachments/assets/16e463cb-dddf-4d12-8a85-3357d47df6ff)
 
 Receive completion suggestions as you type
 
@@ -42,7 +42,7 @@ Click through to definitions
 Notes:
 
 - The extension has "understanding" of factory/trait completion items, but due to limitations on when ruby-lsp displays the completion suggestions, they aren't visible for Symbols (eg. factory/trait names) :/ though they happen to be visible for symbols in Hash/Kw notation (ie with `:` after - `key: ...`)
-- Factory definition is not supported at the moment (current limitation of factory bot), but might come in due course
+- Factory definition is not supported at the moment (limitation of current implementation), but might come in due course
 
 
 ## Development
