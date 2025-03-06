@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["johansenja"]
   spec.email = ["43235608+johansenja@users.noreply.github.com"]
 
-  spec.summary = "A ruby-lsp-rails extension for factorybot"
-  spec.description = "A ruby-lsp-rails extension for factorybot, providing factory, trait and attribute completion, and more"
+  spec.summary = "A ruby-lsp-rails extension for factorybot, supporting hover, go-to-definition and autocompletion"
+  spec.description = "A ruby-lsp-rails extension for factorybot, supporting hover, go-to-definition and autocompletion - for factories, traits and attributes"
   spec.homepage = "https://github.com/johansenja/ruby-lsp-rails-factory-bot"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
